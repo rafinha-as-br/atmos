@@ -1,37 +1,58 @@
 import 'package:flutter/material.dart';
+import '../../../../app/providers/location_controller.dart';
 
 class CurrentWeatherWidget extends StatelessWidget {
   const CurrentWeatherWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(16),
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            const Text(
-              'City Name',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    return ValueListenableBuilder(
+      valueListenable: LocationController().coordinates,
+      builder: (context, coordinates, child) {
+        if (coordinates == null) {
+          return const Card(
+            margin: EdgeInsets.all(16),
+            child: Padding(
+              padding: EdgeInsets.all(24),
+              child: Center(child: Text('Please search for a city')),
             ),
-            const SizedBox(height: 16),
-            const Text(
-              '25°C',
-              style: TextStyle(fontSize: 48, fontWeight: FontWeight.w300),
-            ),
-            const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+          );
+        }
+
+        return Card(
+          margin: const EdgeInsets.all(16),
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
               children: [
-                _buildDetail('Sensation', '27°C'),
-                _buildDetail('Humidity', '60%'),
-                _buildDetail('Wind', '10 km/h'),
+                Text(
+                  'Lat: ${coordinates.$1.toStringAsFixed(2)}, Lon: ${coordinates.$2.toStringAsFixed(2)}',
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Weather API logic pending keys',
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  '--°C',
+                  style: TextStyle(fontSize: 48, fontWeight: FontWeight.w300),
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildDetail('Sensation', '--°C'),
+                    _buildDetail('Humidity', '--%'),
+                    _buildDetail('Wind', '-- km/h'),
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
